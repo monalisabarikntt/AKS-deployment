@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-aks-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: python-aks-app
+  template:
+    metadata:
+      labels:
+        app: python-aks-app
+    spec:
+      containers:
+      - name: python-aks-app
+        image: <your-dockerhub-username>/aks-python-app:latest
+        ports:
+        - containerPort: 5000
