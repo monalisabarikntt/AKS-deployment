@@ -1,0 +1,28 @@
+image:
+  repository: <acrName>.azurecr.io/python-aks-app
+  tag: v1
+
+replicaCount: 2
+
+service:
+  port: 80
+  targetPort: 5000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: myapp.example.com
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "256Mi"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
