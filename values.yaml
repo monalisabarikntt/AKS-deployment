@@ -1,5 +1,5 @@
 image:
-  repository: <acrName>.azurecr.io/python-aks-app
+  repository: aksdemoclusterregistry.azurecr.io/python-aks-app
   tag: v1
 
 replicaCount: 2
@@ -9,7 +9,7 @@ service:
   targetPort: 5000
 
 ingress:
-  enabled: true
+  enabled: false
   className: nginx
   host: myapp.example.com
 

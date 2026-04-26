@@ -1,0 +1,37 @@
+name: Build and Deploy to AKS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ACR_NAME: aksdemoclusterregistry
+  IMAGE_NAME: python-aks-app
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Build and Push Image
+      run: |
+        az acr login --name $ACR_NAME
+        docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }} .
+        docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }}
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+
+    - name: Deploy via Helm
+      run: |
+        az aks get-credentials --resource-group rg-aks-demo --name aks-demo-cluster
+        helm upgrade --install myapp ./python-aks-app \
+          --set image.tag=${{ github.sha }} \
+          --wait --timeout 5m
