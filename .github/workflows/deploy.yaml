@@ -32,6 +32,6 @@ jobs:
     - name: Deploy via Helm
       run: |
         az aks get-credentials --resource-group rg-aks-demo --name aks-demo-cluster
-        helm upgrade --install myapp s\
+        helm upgrade --install myapp \
           --set image.tag=${{ github.sha }} \
           --wait --timeout 5m
